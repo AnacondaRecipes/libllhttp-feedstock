@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/nodejs/llhttp/archive/refs/tags/v{{ version }}.tar.gz
+  url: https://github.com/nodejs/llhttp/archive/refs/tags/release/v{{ version }}.tar.gz
   sha256: 1a2b45cb8dda7082b307d336607023aa65549d6f060da1d246b1313da22b685a
 
 build:
