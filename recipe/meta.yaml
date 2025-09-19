@@ -26,8 +26,10 @@ test:
     - test -f "${PREFIX}/include/llhttp.h"        # [unix]
     - test -f "${PREFIX}/lib/libllhttp.so"        # [linux]
     - test -f "${PREFIX}/lib/libllhttp.dylib"     # [osx]
+    - test -f "${PREFIX}/lib/pkgconfig/libllhttp.pc"  # [unix]
     - if not exist "%PREFIX%\\Library\\include\\llhttp.h" exit 1  # [win]
     - if not exist "%PREFIX%\\Library\\bin\\llhttp.dll" exit 1  # [win]
+    - if not exist "%PREFIX%\\Library\\lib\\pkgconfig\\libllhttp.pc" exit 1  # [win]
     - ( (command -v nm >/dev/null 2>&1 && nm -g "${PREFIX}/lib/"libllhttp*.so | head -n 5) || true )  # [linux]
     - ( (command -v nm >/dev/null 2>&1 && nm -g "${PREFIX}/lib/"libllhttp*.dylib | head -n 5) || true )  # [osx]
 
