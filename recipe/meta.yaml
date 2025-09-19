@@ -14,7 +14,9 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - cmake
     - ninja
 
@@ -32,6 +34,7 @@ about:
   home: https://github.com/nodejs/llhttp
   license: MIT
   license_file: LICENSE
+  license_family: MIT
   summary: "llhttp C HTTP parser library (shared library + headers)"
   description: |
     High-performance HTTP parser written in C.
