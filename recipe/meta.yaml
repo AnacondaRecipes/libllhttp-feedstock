@@ -1,45 +1,46 @@
-{% set name = "<PLEASE ADD PKG NAME>" %}
-{% set version = "<PLEASE ADD PKG VERSION>" %}
+{% set name = "libllhttp" %}
+{% set version = "9.3.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: <sha256>
+  url: https://github.com/nodejs/llhttp/archive/refs/tags/release/v{{ version }}.tar.gz
+  sha256: 1a2b45cb8dda7082b307d336607023aa65549d6f060da1d246b1313da22b685a
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
 
 requirements:
-  host:
-    - python
-    - pip
-  run:
-    - python
+  build:
+    - {{ stdlib('c') }}
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - ninja
+    - zstd        # [osx]
 
 test:
-  imports:
-    - {{ name.replace('-', '.') }}
-  requires:
-    - pip
   commands:
-    - pip check
+    - test -f "${PREFIX}/include/llhttp.h"        # [unix]
+    - test -f "${PREFIX}/lib/libllhttp.so"        # [linux]
+    - test -f "${PREFIX}/lib/libllhttp.dylib"     # [osx]
+    - test -f "${PREFIX}/lib/pkgconfig/libllhttp.pc"  # [unix]
+    - if not exist "%PREFIX%\\Library\\include\\llhttp.h" exit 1  # [win]
+    - if not exist "%PREFIX%\\Library\\bin\\llhttp.dll" exit 1  # [win]
+    - if not exist "%PREFIX%\\Library\\lib\\pkgconfig\\libllhttp.pc" exit 1  # [win]
+    - ( (command -v nm >/dev/null 2>&1 && nm -g "${PREFIX}/lib/"libllhttp*.so | head -n 5) || true )  # [linux]
+    - ( (command -v nm >/dev/null 2>&1 && nm -g "${PREFIX}/lib/"libllhttp*.dylib | head -n 5) || true )  # [osx]
 
 about:
-  home: <PLEASE ADD HOME URL>
-  summary: <PLEASE ADD SUMMARY>
+  home: https://github.com/nodejs/llhttp
+  license: MIT
+  license_file: LICENSE
+  license_family: MIT
+  summary: "llhttp C HTTP parser library (shared library + headers)"
   description: |
-    <PLEASE ADD DESCRIPTION>
-  license: <PLEASE ADD LICENSE>
-  license_family: <PLEASE ADD LICENSE_FAMILY>
-  license_file: <PLEASE_ADD_LICENSE_FILE>
-  dev_url: <PLEASE ADD DEV URL>
-  doc_url: <PLEASE ADD DOC URL>
-
-extra:
-  recipe-maintainers:
-    - Jrice1317
+    High-performance HTTP parser written in C.
+    This package provides the shared C library and headers suitable for linking from other projects.
+  dev_url: https://github.com/nodejs/llhttp
+  doc_url: https://github.com/nodejs/llhttp/blob/main/README.md
